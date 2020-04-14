@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+    <title>NBN-Resolver</title>
+</h:head>
+
+<h:body>
+    <h:outputStylesheet library="css" name="style.css"/>
+
+    <h:graphicImage value="resources/images/kb-logo.png" />
+    <h:graphicImage value="resources/images/dans-logo.png" />
+
+
+    <h:form id="nbn-form" method="post">
+        <h:panelGrid columns="2">
+            <h:outputLabel for="nbn_identifier">Identifier</h:outputLabel>
+            <h:inputText id="nbn_identifier" value="#{resolverBean.identifier}" required="true" requiredMessage="A urn:nbn-identifier is required">
+                <f:validator validatorId="nl.knaw.dans.kb.resolver.validator.NbnValidator"/>
+            </h:inputText>
+
+            <h:outputLabel for="bln_redirect">Show locations</h:outputLabel>
+            <h:selectBooleanCheckbox id="bln_redirect" value="#{resolverBean.resolveDisabled}" disabled="false"/>
+        </h:panelGrid>
+        <h:inputHidden value="nbn-form" id="submittedBy"/>
+        <h:commandButton id="submit-button" value="Resolve" type="submit" action="#{resolverBean.do_resolve}"/>
+    </h:form>
+
+    <h:outputText value="Found locations" rendered="#{resolverBean.resolveDisabled}"/>
+    <h:dataTable value="#{resolverBean.locationList}" var="loc" rendered="#{resolverBean.resolveDisabled}" styleClass="location-table" headerClass="location-table-header" rowClasses="location-table-odd-row,location-table-even-row">
+        <h:column>
+            <f:facet name="header">priority</f:facet>
+            <h:outputText value="#{loc.prio}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">location</f:facet>
+            <h:outputLink value="#{loc.url}" target="_blank">#{loc.url}</h:outputLink>
+        </h:column>
+    </h:dataTable>
+
+</h:body>
+</html>
