@@ -63,12 +63,12 @@ public class UrlResolver {
           response_code = getResponseCode(urlString, (cnt_redir + 1), true, METHOD_GET);
         }
         else { //Received other than 30x or 405 response. We're finished.
-          logger.info("Unresolvable: " + urlString + " (" + response_code + ") => Re-tries : " + cnt_redir + ", realURL: " + httpConnection.getURL());
+          logger.info("Resolved: " + urlString + " (" + response_code + ") => realURL: " + httpConnection.getURL() + ". #Re-dirs: " + cnt_redir );
         }
       }
     }
     catch (IOException e) {
-      logger.info("Could not retrieve response for [" + urlString + "], IOException msg: " + e.getMessage());
+      logger.info("Could not resolve response for [" + urlString + "], IOException: " + e.getMessage());
     }
     return response_code;
   }

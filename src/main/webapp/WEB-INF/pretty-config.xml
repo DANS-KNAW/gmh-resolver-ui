@@ -3,13 +3,31 @@
                xsi:schemaLocation="http://ocpsoft.org/schema/rewrite-config-prettyfaces
                       http://ocpsoft.org/xml/ns/prettyfaces/rewrite-config-prettyfaces.xsd">
 
-    <url-mapping id="resolverBean">
-        <pattern value="/#{identifier}" />
+<!--    <url-mapping id="resolverBean">-->
+<!--        <pattern value="/#{identifier}" />-->
+<!--        <view-id value="/" />-->
+<!--        &lt;!&ndash;        <view-id value="/index.xhtml" />&ndash;&gt;-->
+<!--    </url-mapping>-->
+
+    <url-mapping id="resolve-urn">
+        <pattern value="/#{pathurn}" />
         <view-id value="/" />
-<!--        <view-id value="/index.xhtml" />-->
+        <!--        <view-id value="/index.xhtml" />-->
     </url-mapping>
 
-    <!-- Maps "/user/#{username}" to the URL "/user/view.xhtml?username=value" -->
+
+
+
+
+    <!--
+
+    <url-mapping id="view-user">
+        <pattern value="/#{username}" />
+        <view-id value="/view.xhtml" />
+    </url-mapping>
+
+    Maps "/user/#{username}" to the URL "/view.xhtml?username=value" -->
+
     <!-- https://www.ocpsoft.org/prettyfaces/-->
 
     <!--

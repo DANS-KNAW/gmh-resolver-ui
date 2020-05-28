@@ -20,10 +20,11 @@ import java.util.List;
 public class ResolverBean {
 
   private String identifier;
-  private Boolean resolveDisabled;
+  private Boolean resolveDisabled = Boolean.FALSE;
   private int statusCode;
   private List<Location> locationList;
   private String redirectDisabled;
+  private String pathurn;
 
   //  public Boolean getShowGUILocations() {
   //    return resolveDisabled;
@@ -38,7 +39,11 @@ public class ResolverBean {
   }
 
   public void setIdentifier(String identifier) {
-    this.identifier = identifier;
+
+    if (identifier != null && identifier.toLowerCase().startsWith("urn:nbn:")) {
+      this.identifier = identifier;
+    }
+    System.out.println("#setIdentifier(): "+ identifier);
   }
 
   public Boolean getResolveDisabled() {
@@ -61,6 +66,29 @@ public class ResolverBean {
       this.resolveDisabled = true;
     }
   }
+
+  public String getPathurn() {
+    return pathurn;
+  }
+
+  public void setPathurn(String pathurn) {
+    this.pathurn = pathurn;
+    System.out.println("#setPathurn(): "+ pathurn);
+    if (pathurn != null && pathurn.toLowerCase().startsWith("urn:nbn:")){
+      this.identifier = pathurn;
+//      this.resolveDisabled = Boolean.FALSE;
+//      this.do_resolve();
+    }
+  }
+
+
+  public void onload() {
+    System.out.println("#onload()");
+    System.out.println("identifier:" + this.identifier);
+    System.out.println("isResolveDisabled:" + this.resolveDisabled);
+    this.do_resolve();
+  }
+
 
   //  public void setRedirectDisabled(String redirectDisabled) {
   //    if (redirectDisabled!=null && redirectDisabled.equalsIgnoreCase("on"))
