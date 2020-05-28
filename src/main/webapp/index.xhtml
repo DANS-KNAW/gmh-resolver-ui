@@ -8,40 +8,94 @@
 
 <h:head>
     <title>NBN-Resolver</title>
+    <link href="./resources/css/style.css" rel="stylesheet" type="text/css"/>
 </h:head>
 
 <h:body>
-    <h:outputStylesheet library="css" name="style.css"/>
 
-    <h:graphicImage value="resources/images/kb-logo.png" />
-    <h:graphicImage value="resources/images/dans-logo.png" />
+    <table width="100%" align="center">
+        <tr>
+            <td>
+                <div id="banner"></div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h1>Resolve identifier</h1>
+                <h4>Retrieve the actual location of an object by entering the persistent identifier in the form of a URN:NBN:NL:UI- or URN:NBN:NL:HS- in the search box below</h4>
+                <br/>
+
+<!--                <h:outputText value="#{param['identifier']}"/>-->
+
+                <f:metadata>
+                    <f:viewParam name="identifier" value="#{resolverBean.identifier}"/>
+                    <f:viewParam name="redirectDisabled" value="#{resolverBean.redirectDisabled}"/>
+                </f:metadata>
+                <!--    https://www.persistent-identifier.nl/urn:nbn:nl:ui:13-qv-eaht-->
+                <h:form id="nbn-form" method="post">
+
+                    <h:panelGrid columns="2">
+                        <h:outputLabel for="nbn_identifier">Identifier</h:outputLabel>
+                        <h:inputText id="nbn_identifier" value="#{resolverBean.identifier}" required="true" requiredMessage="A nbn-identifier is mandatory." size="75">
+                            <f:validator validatorId="nl.knaw.dans.kb.resolver.validator.NbnValidator"/>
+                        </h:inputText>
+
+                        <h:outputLabel for="bln_redirect">Show locations</h:outputLabel>
+                        <h:selectBooleanCheckbox id="bln_redirect" value="#{resolverBean.resolveDisabled}" disabled="false"/>
+
+                        <h:inputHidden value="nbn-form" id="submittedBy"/>
+                        <h:commandButton id="submit-button" value="Send" type="submit" action="#{resolverBean.do_resolve}"/>
+
+                    </h:panelGrid>
+
+                    <h:messages style="color: blue" showDetail="true"></h:messages> <!--                    for="nbn_identifier"-->
+
+                </h:form>
+
+                <h:outputText value="Found locations" rendered="#{resolverBean.resolveDisabled}"/>
+                <h:dataTable value="#{resolverBean.locationList}" var="loc" rendered="#{resolverBean.resolveDisabled}" styleClass="location-table" headerClass="location-table-header"
+                             rowClasses="location-table-odd-row,location-table-even-row">
+                    <h:column>
+                        <f:facet name="header">priority</f:facet>
+                        <h:outputText value="#{loc.prio}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">location</f:facet>
+                        <h:outputLink value="#{loc.url}" target="_blank">#{loc.url}</h:outputLink>
+                    </h:column>
+                </h:dataTable>
 
 
-    <h:form id="nbn-form" method="post">
-        <h:panelGrid columns="2">
-            <h:outputLabel for="nbn_identifier">Identifier</h:outputLabel>
-            <h:inputText id="nbn_identifier" value="#{resolverBean.identifier}" required="true" requiredMessage="A urn:nbn-identifier is required">
-                <f:validator validatorId="nl.knaw.dans.kb.resolver.validator.NbnValidator"/>
-            </h:inputText>
+                <script type="text/javascript"> document.forms[0].elements["nbn-form:nbn_identifier"].focus();</script>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <hr noshade="true" size="1px" color="black"/>
+                <div style="text-align: left; font-size: xx-small;">
+                    Version: <h:outputText value="#{versionBean.appVersion}" />
+                </div>
+                <div id="footer">
+                    <div style="text-align: right;">
+                        <h:graphicImage value="resources/images/kb-logo.png" alt="KB" height="40px"/>
+                        &nbsp;
+                        <h:graphicImage value="resources/images/dans-logo.png" alt="DANS" height="40px"/>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
 
-            <h:outputLabel for="bln_redirect">Show locations</h:outputLabel>
-            <h:selectBooleanCheckbox id="bln_redirect" value="#{resolverBean.resolveDisabled}" disabled="false"/>
-        </h:panelGrid>
-        <h:inputHidden value="nbn-form" id="submittedBy"/>
-        <h:commandButton id="submit-button" value="Resolve" type="submit" action="#{resolverBean.do_resolve}"/>
-    </h:form>
-
-    <h:outputText value="Found locations" rendered="#{resolverBean.resolveDisabled}"/>
-    <h:dataTable value="#{resolverBean.locationList}" var="loc" rendered="#{resolverBean.resolveDisabled}" styleClass="location-table" headerClass="location-table-header" rowClasses="location-table-odd-row,location-table-even-row">
-        <h:column>
-            <f:facet name="header">priority</f:facet>
-            <h:outputText value="#{loc.prio}"/>
-        </h:column>
-        <h:column>
-            <f:facet name="header">location</f:facet>
-            <h:outputLink value="#{loc.url}" target="_blank">#{loc.url}</h:outputLink>
-        </h:column>
-    </h:dataTable>
+    <!--    <h:dataTable value="#{locations.getLocations()}" var="loc" styleClass="location-table" headerClass="location-table-header" rowClasses="location-table-odd-row,location-table-even-row">-->
+    <!--        <h:column>-->
+    <!--            <f:facet name="header">priority</f:facet>-->
+    <!--            <h:outputText value="#{loc.prio}"/>-->
+    <!--        </h:column>-->
+    <!--        <h:column>-->
+    <!--            <f:facet name="header">location</f:facet>-->
+    <!--            <h:outputLink value="#{loc.url}" target="_blank">#{loc.url}</h:outputLink>-->
+    <!--        </h:column>-->
+    <!--    </h:dataTable>-->
 
 </h:body>
 </html>

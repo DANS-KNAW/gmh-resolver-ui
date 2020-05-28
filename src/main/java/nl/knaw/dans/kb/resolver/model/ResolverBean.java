@@ -1,7 +1,12 @@
 package nl.knaw.dans.kb.resolver.model;
 
 import nl.knaw.dans.kb.resolver.Location;
+import nl.knaw.dans.kb.resolver.UrlResolver;
+import nl.knaw.dans.kb.resolver.jdbc.PooledDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
@@ -9,17 +14,24 @@ import javax.faces.context.FacesContext;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.net.URL;
 
 @ManagedBean(eager = true)
 @RequestScoped
 public class ResolverBean {
 
-  private String identifier = "urn:NBN:nl:ui:24-uuid:fcf57b9b-1a1d-410b-9e85-08c8fc72d93b";
+  private String identifier;
   private Boolean resolveDisabled;
-  private String realUrl;
   private int statusCode;
   private List<Location> locationList;
+  private String redirectDisabled;
+
+  //  public Boolean getShowGUILocations() {
+  //    return resolveDisabled;
+  //  }
+  //
+  //  public void setShowGUILocations(Boolean showGUILocations) {
+  //    this.showGUILocations = resolveDisabled;
+  //  }
 
   public String getIdentifier() {
     return identifier;
@@ -37,13 +49,31 @@ public class ResolverBean {
     this.resolveDisabled = resolveDisabled;
   }
 
-  public String getRealUrl() {
-    return realUrl;
+  public String getRedirectDisabled() {
+    return redirectDisabled;
   }
 
-  public void setRealUrl(String realUrl) {
-    this.realUrl = realUrl;
+  private static final Logger logger = LoggerFactory.getLogger(ResolverBean.class);
+
+  public void setRedirectDisabled(String redirectDisabled) {
+    this.redirectDisabled = redirectDisabled;
+    if (redirectDisabled != null && redirectDisabled.equalsIgnoreCase("on")) {
+      this.resolveDisabled = true;
+    }
   }
+
+  //  public void setRedirectDisabled(String redirectDisabled) {
+  //    if (redirectDisabled!=null && redirectDisabled.equalsIgnoreCase("on"))
+  //    this.resolveDisabled = true;
+  //  }
+
+  //  public String getRealUrl() {
+  //    return realUrl;
+  //  }
+  //
+  //  public void setRealUrl(String realUrl) {
+  //    this.realUrl = realUrl;
+  //  }
 
   public int getStatusCode() {
     return statusCode;
@@ -62,30 +92,53 @@ public class ResolverBean {
   }
 
   public String do_resolve() {
-    if (resolveDisabled) {
-      locationList = new ArrayList<Location>();
-      locationList.add(new Location(1,"http://www.dds.nl"));
-      locationList.add(new Location(2,"https://www.narcis.nl"));
-      locationList.add(new Location(3,"https://www.persistent-identifier.nl/"));
-      this.setLocationList(locationList);
+    //Get prio-locations list from db for this nbn:
+    List<Location> locations = PooledDataSource.getLocations(this.getIdentifier());
+    this.setLocationList(locations);
+
+    if (resolveDisabled == Boolean.FALSE && !locations.isEmpty()) {
+      //Try to resolve the real-url, starting with the high-prio (first) one.
+      String resolvableLocation = null;
+      for (Location loc : locations) {
+        int statuscode = UrlResolver.getResponseCode(loc.getUrl(), true);
+        if (statuscode == 200) { //Redir to location-url (not the resolved URL)
+          resolvableLocation = loc.getUrl();
+          break; //Do redirection outside loop, IllegalstateException otherwise.
+        }
+      }
+      if (resolvableLocation != null) {
+        this.redirect(resolvableLocation);
+      }
+      else { // Still here??  None of at least one Location resolved to a realUrl...
+        ArrayList<String> lokaties = new ArrayList<>();
+        for (Location loc : locations) {
+          lokaties.add(loc.getUrl());
+        }
+        logger.info("Redirection failed: Unresolvalbe location(s): " + lokaties.toString());
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Redirection failed: Unresolvalbe location(s):", lokaties.toString()));
+      }
     }
-    else {
-      URL realUrl = null;
-      try {
-        realUrl = new URL("http://www.dds.nl");
-        this.redirect(realUrl);
-      }
-      catch (Exception e) {
-        e.printStackTrace();
-      }
+    else if (resolveDisabled == Boolean.FALSE && locations.isEmpty()) {
+      //      System.out.println("Redirection failed: No location(s) found for this identifier.");
+      //      this.setShowGUILocations(Boolean.FALSE);
+      FacesContext context = FacesContext.getCurrentInstance();
+      context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Redirection failed: No location(s) available for this identifier:", this.getIdentifier()));
+      logger.info("Redirection failed: No location(s) available for this identifier: " + this.getIdentifier());
     }
     return "index";
   }
 
-  private void redirect(URL realUrl) throws IOException {
+  private void redirect(String location) {
+    logger.info("Redirecting client to found location: " + location);
     ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-    externalContext.redirect(realUrl.toString());
+    try {
+      externalContext.redirect(location);
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
   }
-
 }
+
 //https://www.persistent-identifier.nl/?d-6417901-s=0&submittedBy=frm&identifier=urn%3ANBN%3Anl%3Aui%3A24-uuid%3Afcf57b9b-1a1d-410b-9e85-08c8fc72d93b&d-6417901-o=2&redirectDisabled=on

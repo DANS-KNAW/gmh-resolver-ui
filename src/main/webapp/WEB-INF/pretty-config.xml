@@ -1,0 +1,24 @@
+<pretty-config xmlns="http://ocpsoft.org/schema/rewrite-config-prettyfaces"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://ocpsoft.org/schema/rewrite-config-prettyfaces
+                      http://ocpsoft.org/xml/ns/prettyfaces/rewrite-config-prettyfaces.xsd">
+
+    <url-mapping id="resolverBean">
+        <pattern value="/#{identifier}" />
+        <view-id value="/" />
+<!--        <view-id value="/index.xhtml" />-->
+    </url-mapping>
+
+    <!-- Maps "/user/#{username}" to the URL "/user/view.xhtml?username=value" -->
+    <!-- https://www.ocpsoft.org/prettyfaces/-->
+
+    <!--
+    Dit is wellicht handig: Aan de bean de 'echte URL vragen?!
+    -->
+
+    <!--    <url-mapping id="example" >-->
+<!--        <pattern value="/welcome" />-->
+<!--        <view-id value="#{dynamic.getUglyLink}" />-->
+<!--    </url-mapping>-->
+
+</pretty-config>

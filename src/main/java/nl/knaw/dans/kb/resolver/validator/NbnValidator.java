@@ -26,7 +26,7 @@ public class NbnValidator implements Validator {
     matcher = pattern.matcher(value.toString());
     if (!matcher.matches()) {
 
-      FacesMessage msg = new FacesMessage("urn:nbn-identifier validation failed.", "Invalid URI format.");
+      FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Given nbn-identifier is not valid.", value.toString());
       msg.setSeverity(FacesMessage.SEVERITY_ERROR);
       throw new ValidatorException(msg);
     }

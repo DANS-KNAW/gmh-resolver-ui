@@ -43,36 +43,17 @@
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
+<!--        <param-value>Production</param-value>-->
     </context-param>
 
     <context-param>
         <description>State saving method: 'client' or 'server' (default). See JSF Specification section 2.5.2</description>
         <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
-        <param-value>server</param-value>
+        <param-value>client</param-value>
     </context-param>
 
-<!--    <context-param>-->
-<!--        <param-name>javax.faces.application.CONFIG_FILES</param-name>-->
-<!--        <param-value>/WEB-INF/obfuscated-faces-config.xml</param-value>-->
-<!--    </context-param>-->
-
-
-    <error-page>
-        <error-code>500</error-code>
-        <location>/error.jsp</location>
-    </error-page>
-    <error-page>
-        <error-code>400</error-code>
-        <location>/index.xhtml</location>
-    </error-page>
-    <error-page>
-        <error-code>403</error-code>
-        <location>/403.jsp</location>
-    </error-page>
-    <error-page>
-        <error-code>404</error-code>
-        <location>/WEB-INF/errorpages/404.xhtml</location>
-    </error-page>
-
+    <session-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
 
 </web-app>
