@@ -19,6 +19,7 @@ public class UrlResolverTest {
     for (String location : locations) {
       int statuscode = UrlResolver.getResponseCode(location, true);
       assertEquals(statuscode, statuscodes[i]);
+      System.out.println( statuscode + ": " + location);
       i++;
     }
   }

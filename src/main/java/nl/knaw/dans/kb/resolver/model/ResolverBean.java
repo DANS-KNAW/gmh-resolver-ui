@@ -25,14 +25,7 @@ public class ResolverBean {
   private List<Location> locationList;
   private String redirectDisabled;
   private String pathurn;
-
-  //  public Boolean getShowGUILocations() {
-  //    return resolveDisabled;
-  //  }
-  //
-  //  public void setShowGUILocations(Boolean showGUILocations) {
-  //    this.showGUILocations = resolveDisabled;
-  //  }
+  private final String URN_PREFIX = "urn:nbn:";
 
   public String getIdentifier() {
     return identifier;
@@ -40,10 +33,9 @@ public class ResolverBean {
 
   public void setIdentifier(String identifier) {
 
-    if (identifier != null && identifier.toLowerCase().startsWith("urn:nbn:")) {
+    if (identifier != null && identifier.toLowerCase().startsWith(URN_PREFIX)) {
       this.identifier = identifier;
     }
-    System.out.println("#setIdentifier(): "+ identifier);
   }
 
   public Boolean getResolveDisabled() {
@@ -73,8 +65,7 @@ public class ResolverBean {
 
   public void setPathurn(String pathurn) {
     this.pathurn = pathurn;
-    System.out.println("#setPathurn(): "+ pathurn);
-    if (pathurn != null && pathurn.toLowerCase().startsWith("urn:nbn:")){
+    if (pathurn != null && pathurn.toLowerCase().startsWith(URN_PREFIX)){
       this.identifier = pathurn;
 //      this.resolveDisabled = Boolean.FALSE;
 //      this.do_resolve();
@@ -83,25 +74,10 @@ public class ResolverBean {
 
 
   public void onload() {
-    System.out.println("#onload()");
-    System.out.println("identifier:" + this.identifier);
-    System.out.println("isResolveDisabled:" + this.resolveDisabled);
-    this.do_resolve();
+    if (identifier != null && identifier.toLowerCase().startsWith(URN_PREFIX)) {
+      this.do_resolve();
+    }
   }
-
-
-  //  public void setRedirectDisabled(String redirectDisabled) {
-  //    if (redirectDisabled!=null && redirectDisabled.equalsIgnoreCase("on"))
-  //    this.resolveDisabled = true;
-  //  }
-
-  //  public String getRealUrl() {
-  //    return realUrl;
-  //  }
-  //
-  //  public void setRealUrl(String realUrl) {
-  //    this.realUrl = realUrl;
-  //  }
 
   public int getStatusCode() {
     return statusCode;
