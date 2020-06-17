@@ -65,13 +65,10 @@ public class ResolverBean {
 
   public void setPathurn(String pathurn) {
     this.pathurn = pathurn;
-    if (pathurn != null && pathurn.toLowerCase().startsWith(URN_PREFIX)){
+    if (pathurn != null && pathurn.toLowerCase().startsWith(URN_PREFIX)) {
       this.identifier = pathurn;
-//      this.resolveDisabled = Boolean.FALSE;
-//      this.do_resolve();
     }
   }
-
 
   public void onload() {
     if (identifier != null && identifier.toLowerCase().startsWith(URN_PREFIX)) {

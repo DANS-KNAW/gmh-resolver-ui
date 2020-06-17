@@ -47,7 +47,13 @@ public class PooledDataSource {
   public static List<Location> getLocations(String identifier) {
     List<Location> locations = new ArrayList<Location>();
 
-    logger.info("Getting location(s) for: " + identifier);
+//    Get rid of the fragment part:
+    String unfragmented = identifier;
+    if (identifier != null && identifier.contains("#")) {
+      unfragmented = identifier.split("#")[0];
+    }
+
+    logger.info("Getting location(s) for: " + unfragmented);
 
     ResultSet rs = null;
     Connection conn = null;
@@ -56,7 +62,7 @@ public class PooledDataSource {
     try {
       conn = PooledDataSource.getConnection();
       pstmt = conn.prepareStatement("SELECT L.location_url, IL.isFailover FROM identifier I JOIN identifier_location IL ON I.identifier_id = IL.identifier_id JOIN location L ON L.location_id = IL.location_id WHERE I.identifier_value=? ORDER BY IL.isFailover, IL.last_modified DESC");
-      pstmt.setString(1, identifier);
+      pstmt.setString(1, unfragmented);
       rs = pstmt.executeQuery();
 
       int i=0;
