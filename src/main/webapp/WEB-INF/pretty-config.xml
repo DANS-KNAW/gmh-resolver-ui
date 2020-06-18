@@ -3,20 +3,33 @@
                xsi:schemaLocation="http://ocpsoft.org/schema/rewrite-config-prettyfaces
                       http://ocpsoft.org/xml/ns/prettyfaces/rewrite-config-prettyfaces.xsd">
 
-<!--    <url-mapping id="resolverBean">-->
-<!--        <pattern value="/#{identifier}" />-->
+<!--    https://www.ocpsoft.org/docs/prettyfaces/3.3.3/en-US/html/Configuration.html#config.pathparams.regex -->
+<!--    https://stackoverflow.com/questions/15012830/prettyfaces-and-converter-not-working -->
+<!--    https://www.ocpsoft.org/support/topic/problems-with-enconded-slashs-inside-param-values -->
+<!--    https://stackoverflow.com/questions/8770149/how-to-use-prettyfaces-with-converter-->
+
+<!--    <url-mapping id="resolve-urn">-->
+<!--&lt;!&ndash;        <pattern value="/#{pathurn}" />&ndash;&gt;-->
+<!--&lt;!&ndash;        <pattern value="/#{ /.+/ pathurn }" />&ndash;&gt;-->
+<!--        <pattern value="/#{ /[uU][rR][nN]:[nN][bB][nN]:[nN][lL](:([a-zA-Z]{2}))?:\\d{2}-.+/ pathurn }" />-->
 <!--        <view-id value="/" />-->
-<!--        &lt;!&ndash;        <view-id value="/index.xhtml" />&ndash;&gt;-->
 <!--    </url-mapping>-->
 
-    <url-mapping id="resolve-urn">
-        <pattern value="/#{pathurn}" />
-        <view-id value="/" />
-        <!--        <view-id value="/index.xhtml" />-->
+<!--
+<url-mapping id="resolvepathurn">
+    <pattern value="/#{ /[uU][rR][nN]:[nN][bB][nN]:[nN][lL](:([a-zA-Z]{2}))?:\\d{2}-.+/ identifier: resolverBean.pathurn }" /> #WERKT NIET: invalide urn:nbn matched niet daarom wordt de resource niet gevonden...
+    <view-id value="/index.xhtml" />
+&lt;!&ndash;        <action>#{resolverBean.onload}</action>&ndash;&gt;
+  </url-mapping>
+ -->
+
+
+    <url-mapping id="resolvepathurn">
+<!--        <pattern value="/#{ /.+/ identifier }" />-->
+        <pattern value="/#{ /[uU][rR][nN]:[nN][bB][nN].+/ identifier }" />
+        <view-id value="/index.xhtml" />
+        <!--        <action>#{resolverBean.onload}</action>-->
     </url-mapping>
-
-
-
 
 
     <!--

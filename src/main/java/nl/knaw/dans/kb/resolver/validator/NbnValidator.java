@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 @FacesValidator("nl.knaw.dans.kb.resolver.validator.NbnValidator")
 public class NbnValidator implements Validator {
 
-  private static final String NBN_PATTERN = "^[uU][rR][nN]:[nN][bB][nN]:[nN][lL](:([a-zA-Z]{2}))?:\\d{2}-.+";
+  public static final String NBN_PATTERN = "^[uU][rR][nN]:[nN][bB][nN]:[nN][lL](:([a-zA-Z]{2}))?:\\d{2}-.+";
   private Pattern pattern;
   private Matcher matcher;
 
