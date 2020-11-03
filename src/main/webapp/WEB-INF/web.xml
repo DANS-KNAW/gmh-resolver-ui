@@ -52,33 +52,12 @@
         <param-value>client</param-value>
     </context-param>
 
+    <error-page>
+<!--        <exception-type>nl.knaw.dans.kb.resolver.jdbc.NoDBConnectionException</exception-type>-->
+        <error-code>503</error-code>
+        <location>/WEB-INF/errorpages/503.xhtml</location>
+    </error-page>
 
-<!--    <context-param>-->
-<!--        <param-name>javax.faces.WEBAPP_RESOURCES_DIRECTORY</param-name>-->
-<!--        <param-value>/META-INF/resources</param-value>-->
-<!--    </context-param>-->
-
-<!--    <resource-ref>-->
-<!--        <description>nbn-resolver DataSource</description>-->
-<!--        <res-ref-name>jdbc/nbnresolver</res-ref-name>-->
-<!--        <res-type>javax.sql.DataSource</res-type> &lt;!&ndash;    com.mysql.cj.jdbc.MysqlConnectionPoolDataSource &ndash;&gt;-->
-<!--        <res-auth>Container</res-auth>-->
-<!--        <res-sharing-scope>Shareable</res-sharing-scope>-->
-<!--    </resource-ref>-->
-
-    <!--    <context-param>-->
-<!--        <param-name>javax.faces.application.CONFIG_FILES</param-name>-->
-<!--        <param-value>/WEB-INF/obfuscated-faces-config.xml</param-value>-->
-<!--    </context-param>-->
-
-<!--    <error-page>-->
-<!--        <error-code>400</error-code>-->
-<!--        <location>/index.xhtml</location>-->
-<!--    </error-page>-->
-<!--    <error-page>-->
-<!--        <error-code>403</error-code>-->
-<!--        <location>/403.jsp</location>-->
-<!--    </error-page>-->
     <error-page>
         <error-code>500</error-code>
         <location>/WEB-INF/errorpages/500.xhtml</location>

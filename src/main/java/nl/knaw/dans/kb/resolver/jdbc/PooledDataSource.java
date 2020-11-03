@@ -5,17 +5,20 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.faces.context.FacesContext;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class PooledDataSource {
 
-  private static BasicDataSource ds = new BasicDataSource();
+  private static final BasicDataSource ds = new BasicDataSource();
   private static final Logger logger = LoggerFactory.getLogger(PooledDataSource.class);
 
   static {
@@ -24,7 +27,6 @@ public class PooledDataSource {
     ds.setUrl(properties.getString("MYSQL_DB_URL"));
     ds.setUsername(properties.getString("MYSQL_DB_USERNAME"));
     ds.setPassword(properties.getString("MYSQL_DB_PASSWORD"));
-//    ds.setPassword(System.getProperty("mysqldb.pwd"));
 
     ds.setMinIdle(2);
     ds.setMaxIdle(10);
@@ -41,13 +43,13 @@ public class PooledDataSource {
 
   // This method is used to print the Connection Pool status:
   private static void printDbStatus() {
-    logger.info("Max.: " + ds.getMaxActive() + "; Active: " + ds.getNumActive() + "; Idle: " + ds.getNumIdle());
+    logger.debug("Max.: " + ds.getMaxActive() + "; Active: " + ds.getNumActive() + "; Idle: " + ds.getNumIdle());
   }
 
   public static List<Location> getLocations(String identifier) {
     List<Location> locations = new ArrayList<Location>();
 
-//    Get rid of the fragment part:
+    //    Get rid of the fragment part:
     String unfragmented = identifier;
     if (identifier != null && identifier.contains("#")) {
       unfragmented = identifier.split("#")[0];
@@ -65,13 +67,21 @@ public class PooledDataSource {
       pstmt.setString(1, unfragmented);
       rs = pstmt.executeQuery();
 
-      int i=0;
+      int i = 0;
       while (rs.next()) {
         locations.add(new Location(i++, rs.getString(1)));
       }
     }
     catch (SQLException e) {
-      e.printStackTrace();
+      logger.error("Getting locations for NBN went wrong... (SQLException)");
+      FacesContext facesContext = FacesContext.getCurrentInstance();
+      try {
+        facesContext.getExternalContext().responseSendError(503, "Lost DB connection");
+      }
+      catch (IOException io) {
+        //ignored
+      }
+      facesContext.responseComplete();
     }
     finally {
       try {
@@ -86,10 +96,50 @@ public class PooledDataSource {
         }
       }
       catch (Exception ex) {
-        ex.printStackTrace();
+        //ignored
       }
     }
     return locations;
+  }
+
+  public static void testDBConnection() {
+    logger.debug("Testing DB connection");
+    ResultSet rs = null;
+    Connection conn = null;
+    Statement stmt = null;
+
+    try {
+      conn = PooledDataSource.getConnection();
+      stmt = conn.createStatement();
+      rs = stmt.executeQuery("SELECT 'test'");
+    }
+    catch (SQLException e) {
+      logger.error("Testing DB connection went wrong...");
+      FacesContext facesContext = FacesContext.getCurrentInstance();
+      try {
+        facesContext.getExternalContext().responseSendError(503, "Lost DB connection");
+      }
+      catch (IOException io) {
+        //ignored
+      }
+      facesContext.responseComplete();
+    }
+    finally {
+      try {
+        if (rs != null) {
+          rs.close();
+        }
+        if (stmt != null) {
+          stmt.close();
+        }
+        if (conn != null) {
+          conn.close();
+        }
+      }
+      catch (Exception ex) {
+        ex.printStackTrace();
+      }
+    }
   }
 }
 

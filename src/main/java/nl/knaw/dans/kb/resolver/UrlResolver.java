@@ -52,7 +52,7 @@ public class UrlResolver {
 
         if (response_code == HttpURLConnection.HTTP_MOVED_PERM || response_code == HttpURLConnection.HTTP_MOVED_TEMP || response_code == HttpURLConnection.HTTP_SEE_OTHER) {
           String movedLocation = httpConnection.getHeaderField(HEADER_FIELD_LOCATION);
-          //          System.out.println(method + ": " + urlString + " (" + response_code + ") => Location-Header: " + movedLocation);
+//          System.out.println(method + ": " + urlString + " (" + response_code + ") => Location-Header: " + movedLocation);
           if (movedLocation != null && !movedLocation.isEmpty() && cnt_redir <= MAX_HOP_COUNT) {
             movedLocation = mergePaths(urlString, movedLocation);
             response_code = getResponseCode(movedLocation, (cnt_redir + 1), true, METHOD_HEAD);

@@ -84,6 +84,9 @@ public class ResolverBean {
     if (identifier != null) {
       this.do_resolve();
     }
+    else {
+      PooledDataSource.testDBConnection();
+    }
   }
 
   public String do_resolve() {
@@ -141,5 +144,3 @@ public class ResolverBean {
     }
   }
 }
-
-//https://www.persistent-identifier.nl/?d-6417901-s=0&submittedBy=frm&identifier=urn%3ANBN%3Anl%3Aui%3A24-uuid%3Afcf57b9b-1a1d-410b-9e85-08c8fc72d93b&d-6417901-o=2&redirectDisabled=on

@@ -5,7 +5,7 @@
     <groupId>nl.knaw.dans.kb</groupId>
     <artifactId>nbnresolver</artifactId>
     <packaging>war</packaging>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.2.0</version>
     <name>nbnresolver Webapp userinterface</name>
     <url>https://persistent-identifier.nl</url>
 
@@ -141,10 +141,10 @@
                     </httpConnector>
                     <systemProperties>
 
-                        <systemProperty>
-                            <name>log4j.configuration</name>
-                            <value>log4j_localhost.properties</value>
-                        </systemProperty>
+<!--                        <systemProperty>-->
+<!--                            <name>log4j.configuration</name>-->
+<!--                            <value>log4j_localhost.properties</value>-->
+<!--                        </systemProperty>-->
 
                         <systemProperty>
                             <name>file.encoding</name>
@@ -160,6 +160,7 @@
                     <webApp>
                         <contextPath>/</contextPath>
                     </webApp>
+                    <useTestScope>true</useTestScope>
                 </configuration>
             </plugin>
 
