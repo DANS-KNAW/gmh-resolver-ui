@@ -13,6 +13,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -20,7 +21,7 @@ import java.util.regex.Pattern;
 
 @ManagedBean(eager = true)
 @RequestScoped
-public class ResolverBean {
+public class ResolverBean implements Serializable {
 
   private String identifier;
   private Boolean resolveDisabled = Boolean.FALSE;
