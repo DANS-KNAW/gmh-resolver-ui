@@ -9,6 +9,12 @@
     <name>nbnresolver Webapp userinterface</name>
     <url>https://persistent-identifier.nl</url>
 
+    <parent>
+        <groupId>nl.knaw.dans.shared</groupId>
+        <artifactId>dans-java-project</artifactId>
+        <version>4.0.1</version>
+    </parent>
+
     <description>
         The URN-Resolver is a Web Application that allows web users to be automatically redirected to one of the locations
         registered with a submitted identifier.
@@ -186,6 +192,22 @@
                     <useTestScope>true</useTestScope>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <configuration combine.self="append">
+                    <includes>
+                        <include>src/*/java/**/*.java</include>
+                    </includes>
+                    <excludes combine.children="append">
+                        <exclude>logs/**</exclude>
+                        <exclude>*.tmp</exclude>
+                        <exclude>*.xhtml</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
 
         </plugins>
 
