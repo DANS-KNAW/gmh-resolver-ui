@@ -21,13 +21,15 @@ import javax.faces.context.FacesContext;
 import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @FacesValidator("nl.knaw.dans.kb.resolver.validator.NbnValidator")
 public class NbnValidator implements Validator {
 
-  public static final String NBN_PATTERN = "^[uU][rR][nN]:[nN][bB][nN]:[nN][lL](:([a-zA-Z]{2}))?:\\d{2}-.+";
+  public static final String NBN_PATTERN = "^[uU][rR][nN]:[nN][bB][nN]:[nN][lL](:([a-zA-Z]{2}))(:\\d{2})?-.+";
   private Pattern pattern;
   private Matcher matcher;
 
@@ -47,4 +49,17 @@ public class NbnValidator implements Validator {
     }
 
   }
+
+  public static void main(String[] args) {
+    List<String> testStrings = Arrays.asList("urn:nbn:nl:kb-15779kl70142464", "urn:nbn:nl:ui:13-15779kl70142464", "urn:nbn:nl:kb-1234567890123", "urn:nbn:nl:HS:26-abcdefg", "urn:nbn:nl:In-1234567890123");
+
+    Pattern pattern = Pattern.compile(NbnValidator.NBN_PATTERN);
+
+    for (String testString : testStrings) {
+      Matcher matcher = pattern.matcher(testString);
+      boolean matches = matcher.matches();
+      System.out.println("String: " + testString + " matches: " + matches);
+    }
+  }
+
 }
